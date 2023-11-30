@@ -6,7 +6,10 @@ namespace JustLinq.SqlServer
     {
         public override string Translate(Expression expression)
         {
-            return new JustLinqExpressionVisitor().Print(expression);
+            var visitor = new JustLinqExpressionVisitor();
+            visitor.Visit(expression);
+
+            return visitor.TranslatedQuery;
         }
     }
 }

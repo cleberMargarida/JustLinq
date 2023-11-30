@@ -20,7 +20,7 @@ namespace System.Reflection
 
             properties.TryGetValue("Id", out var keyColumnProperty);
 
-            var keyColumn = properties.Values//todo attribute key
+            var keyColumn = properties.Values //TODO: get key decorator
                 .SingleOrDefault(p => p.GetCustomAttribute<Attribute>() != null)?
                 .Name ?? keyColumnProperty?.Name ?? throw GetInvalidOperationException(type);
 

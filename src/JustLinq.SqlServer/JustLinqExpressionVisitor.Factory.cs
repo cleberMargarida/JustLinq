@@ -1,9 +1,8 @@
-﻿using JustLinq.SqlServer;
-using System.Linq;
+﻿using System.Linq;
 
 namespace JustLinq.SqlServer
 {
-    internal class JustLinqExpressionVisitorFactory : IExpressionPrinterFactory
+    internal class JustLinqExpressionVisitorFactory
     {
         private static readonly JustLinqExpressionVisitorFactory _instance = new JustLinqExpressionVisitorFactory();
 
@@ -20,7 +19,5 @@ namespace JustLinq.SqlServer
         internal JustLinqJoinExpressionVisitor JoinVisitor => new JustLinqJoinExpressionVisitor();
         internal JustLinqTableExpressionVisitor TableVisitor => new JustLinqTableExpressionVisitor();
         internal JustLinqExpressionVisitor DefaultVisitor => new JustLinqExpressionVisitor();
-
-        IExpressionPrinter IExpressionPrinterFactory.Create(string? methodName) => Create(methodName);
     }
 }

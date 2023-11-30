@@ -15,7 +15,8 @@ namespace JustLinq.SqlServer
                 return base.VisitMethodCall(node);
             }
             _stringBuilder.Append('(');
-            _stringBuilder.Append(FactorySingleton.DefaultVisitor.Print(node));
+            //TODO: implement join
+            //_stringBuilder.Append(FactorySingleton.DefaultVisitor.Print(node));
             _stringBuilder.Append(')');
             _stringBuilder.Append(" AS ");
 

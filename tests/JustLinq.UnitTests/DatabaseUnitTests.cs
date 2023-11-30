@@ -17,18 +17,14 @@ public class DatabaseUnitTests
         // Arrange
         const string ExpectedQuery =
         """
-        
-            SELECT
-                Employee.Id 
-            FROM
-                Employee AS Employee 
-            WHERE
-                Employee.Name = "Cleber"
+        SELECT [Employee].[Id]
+        FROM [Employee] AS [Employee]
+        WHERE [Employee].[Name] = 'Bob Smith'
         """;
 
         // Act
         var query = database.CreateQuery<Employee>()
-                            .Where(x => x.Name == "Cleber")
+                            .Where(x => x.Name == "Bob Smith")
                             .Select(x => x.Id)
                             .ToQueryString();
 
@@ -43,19 +39,15 @@ public class DatabaseUnitTests
         // Arrange
         const string ExpectedQuery =
         """
-        
-            SELECT
-                Employee.Name 
-            FROM
-                Employee AS Employee 
-            WHERE
-                Employee.Name = "Cleber"
+        SELECT [Employee].[Name]
+        FROM [Employee] AS [Employee]
+        WHERE [Employee].[Name] = 'Bob Smith'
         """;
 
         // Act
         var query = database.CreateQuery<Employee>()
                             .Select(x => x.Name)
-                            .Where(x => x == "Cleber")
+                            .Where(x => x == "Bob Smith")
                             .ToQueryString();
 
 

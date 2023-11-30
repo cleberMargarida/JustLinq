@@ -5,12 +5,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using static JustLinq.SqlServer.JustLinqExpressionVisitorFactory;
 
 namespace JustLinq.SqlServer
 {
     internal partial class JustLinqExpressionVisitor : JustLinqExpressionVisitorBase
     {
+        private uint _depth = 0;
+
         protected readonly StringBuilder _stringBuilder = new StringBuilder();
         private static readonly Dictionary<ExpressionType, string> _binaryOperandMap = new Dictionary<ExpressionType, string>()
         {
@@ -89,6 +90,7 @@ namespace JustLinq.SqlServer
         };
 
         protected List<TableExpression> Tables { get; private set; } = new List<TableExpression>();
+        public string TranslatedQuery => _stringBuilder.ToString();
 
         protected override Expression VisitSelect(SelectExpression node)
         {
@@ -101,7 +103,8 @@ namespace JustLinq.SqlServer
         protected override Expression VisitWhere(WhereExpression node)
         {
             Visit(node.Source);
-            _stringBuilder.Append(" WHERE ");
+            _stringBuilder.AppendLine();
+            _stringBuilder.Append("WHERE ");
             Visit(node.Condition);
             return node;
         }
@@ -109,7 +112,8 @@ namespace JustLinq.SqlServer
         protected override Expression VisitOrderBy(OrderByExpression node)
         {
             Visit(node.Source);
-            _stringBuilder.Append(" ORDER BY ");
+            _stringBuilder.AppendLine();
+            _stringBuilder.Append("ORDER BY ");
             Visit(node.Predicate);
             return node;
         }
@@ -134,7 +138,8 @@ namespace JustLinq.SqlServer
         protected override Expression VisitTake(TakeExpression node)
         {
             Visit(node.Source);
-            _stringBuilder.Append(" LIMIT ");
+            _stringBuilder.AppendLine();
+            _stringBuilder.Append("LIMIT ");
             Visit(node.Number);
             return node;
         }
@@ -263,9 +268,15 @@ namespace JustLinq.SqlServer
             return node;
         }
 
+        //protected override Expression VisitJoin(JoinExpression node)
+        //{
+        //    _stringBuilder.Append(FactorySingleton.JoinVisitor.Print((MethodCallExpression)node));
+        //    return node;
+        //}
+
         protected override Expression VisitJoin(JoinExpression node)
         {
-            _stringBuilder.Append(FactorySingleton.JoinVisitor.Print((MethodCallExpression)node));
+            //TODO: implement join
             return node;
         }
 
@@ -320,8 +331,7 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitConstantTable(TableExpression node)
         {
-            var nodeString = " FROM " + node.ToString();
-            Tables.Add(node);
+            _stringBuilder.AppendLine();
 
             if (!_stringBuilder.ToString().StartsWith("SELECT "))
             {
@@ -329,7 +339,11 @@ namespace JustLinq.SqlServer
                 _stringBuilder.Append(string.Join(", ", GetColumns(node.TableType)));
             }
 
-            _stringBuilder.Append(nodeString);
+            _stringBuilder.Append("FROM ");
+            _stringBuilder.AppendWithSquareBracketAround(node.Value.TableName);
+            _stringBuilder.Append(" AS ");
+            _stringBuilder.AppendWithSquareBracketAround(node.TableType.Name);
+            Tables.Add(node);
             return node;
         }
 
@@ -353,10 +367,11 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            var source = node.Expression.Type.Name;//todo column attribute
+            var source = node.Expression.Type.Name; //TODO: get column decorator
             var member = (node.Member.GetCustomAttribute<Attribute>()?.ToString()) ?? node.Member.Name;
-            var column = source + "." + member;
-            _stringBuilder.Append(column);
+            _stringBuilder.AppendWithSquareBracketAround(source);
+            _stringBuilder.Append('.');
+            _stringBuilder.AppendWithSquareBracketAround(member);
             return node;
         }
 
@@ -394,7 +409,7 @@ namespace JustLinq.SqlServer
         protected string[] GetColumns(Type tableType)
         {
             var prefix = tableType.Name;
-            var propertyInfos = tableType.GetProperties(); // todo column attribute
+            var propertyInfos = tableType.GetProperties(); //TODO: get column decorator
             return propertyInfos.Select(p => prefix + "." + ((p.GetCustomAttribute<Attribute>()?.ToString()) ?? p.Name)).ToArray();
         }
     }

@@ -292,11 +292,6 @@ namespace System.Linq.Expressions
         public Type TableType { get; }
         public Table Value { get; }
 
-        public override string ToString()
-        {
-            return string.Format("{0} AS {1}", Value.TableName, TableType.Name);
-        }
-
         public static explicit operator TableExpression(ConstantExpression node)
         {
             if (node.Value is Table table)

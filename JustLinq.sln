@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34310.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9538097A-508C-4E11-A1B8-F167DC7C09F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1D872EDA-357E-4CBC-834A-6977A4EE56CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "quickstart", "quickstart", "{22FBB23F-6D38-4364-96F5-40CC05FE8E6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FE8BB2BA-13AD-448D-B676-AB0E2FE83BF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustLinq", "src\JustLinq\JustLinq.csproj", "{24694231-325B-4E31-86EF-1B1A2FAF5352}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustLinq.UnitTests", "tests\JustLinq.UnitTests\JustLinq.UnitTests.csproj", "{691B4449-71A2-4D88-B8A3-AB7883F2D90E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustLinq.SqlServer", "src\JustLinq.SqlServer\JustLinq.SqlServer.csproj", "{82A14B13-6C33-4605-A692-17C6675742CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24694231-325B-4E31-86EF-1B1A2FAF5352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24694231-325B-4E31-86EF-1B1A2FAF5352}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24694231-325B-4E31-86EF-1B1A2FAF5352}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24694231-325B-4E31-86EF-1B1A2FAF5352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{691B4449-71A2-4D88-B8A3-AB7883F2D90E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{691B4449-71A2-4D88-B8A3-AB7883F2D90E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{691B4449-71A2-4D88-B8A3-AB7883F2D90E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{691B4449-71A2-4D88-B8A3-AB7883F2D90E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82A14B13-6C33-4605-A692-17C6675742CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A14B13-6C33-4605-A692-17C6675742CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A14B13-6C33-4605-A692-17C6675742CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A14B13-6C33-4605-A692-17C6675742CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{24694231-325B-4E31-86EF-1B1A2FAF5352} = {9538097A-508C-4E11-A1B8-F167DC7C09F8}
+		{691B4449-71A2-4D88-B8A3-AB7883F2D90E} = {1D872EDA-357E-4CBC-834A-6977A4EE56CC}
+		{82A14B13-6C33-4605-A692-17C6675742CE} = {9538097A-508C-4E11-A1B8-F167DC7C09F8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {06089E66-EE07-4CF9-AD6A-EAD09D138808}
+	EndGlobalSection
+EndGlobal

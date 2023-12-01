@@ -13,6 +13,25 @@ namespace JustLinq.SqlServer
         private uint _depth = 0;
 
         protected readonly StringBuilder _stringBuilder = new StringBuilder();
+        private static readonly Dictionary<ExpressionType, string> _comparingOperandMap = new Dictionary<ExpressionType, string>()
+        {
+            {
+                ExpressionType.OrElse,
+                "||"
+            },
+            {
+                ExpressionType.AndAlso,
+                "AND"
+            },
+            {
+                ExpressionType.And,
+                "&"
+            },
+            {
+                ExpressionType.Or,
+                "|"
+            }
+        };
         private static readonly Dictionary<ExpressionType, string> _binaryOperandMap = new Dictionary<ExpressionType, string>()
         {
             {
@@ -44,14 +63,6 @@ namespace JustLinq.SqlServer
                 " <= "
             },
             {
-                ExpressionType.OrElse,
-                " || "
-            },
-            {
-                ExpressionType.AndAlso,
-                " AND "
-            },
-            {
                 ExpressionType.Coalesce,
                 " ?? "
             },
@@ -74,14 +85,6 @@ namespace JustLinq.SqlServer
             {
                 ExpressionType.Modulo,
                 " % "
-            },
-            {
-                ExpressionType.And,
-                " & "
-            },
-            {
-                ExpressionType.Or,
-                " | "
             },
             {
                 ExpressionType.ExclusiveOr,
@@ -139,7 +142,7 @@ namespace JustLinq.SqlServer
         {
             Visit(node.Source);
             _stringBuilder.AppendLine();
-            _stringBuilder.Append("LIMIT ");
+            _stringBuilder.Append("TOP ");
             Visit(node.Number);
             return node;
         }
@@ -154,54 +157,41 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitFirst(FirstExpression node)
         {
+            var lengthBefore = _stringBuilder.Length + "SELECT".Length;
             Visit(node.Source);
-            _stringBuilder.Append(" LIMIT 1");
+            _stringBuilder.Insert(lengthBefore, " TOP(1)");
             return node;
         }
 
         protected override Expression VisitLast(LastExpression node)
         {
             Visit(node.Source);
+            _stringBuilder.Append("SELECT TOP(1) ");
+            _stringBuilder.AppendLine();
 
-            if (CallStack.Contains(nameof(Queryable.Where)))
-            {
-                _stringBuilder.Append(" AND ");
-            }
-            else
-            {
-                _stringBuilder.Append(" WHERE ");
-            }
+            //SELECT TOP(1) [e].[Id], [e].[Email], [e].[Name], [e].[Phone], [e].[StartDate]
+            //FROM[Employee] AS[e]
+            //ORDER BY[e].[Name] DESC
+            Visit(node.Source);
 
-            var lastSource = Tables.Last();
-            var keyColumn = lastSource.TableType.Name + "." + lastSource.TableType.KeyColumn();
-
-            _stringBuilder.Append(keyColumn);
-            _stringBuilder.Append(" = ");
-            _stringBuilder.Append('(');
-            _stringBuilder.Append("SELECT MAX(");
-            _stringBuilder.Append(keyColumn);
-            _stringBuilder.Append(')');
-            VisitConstantTable(lastSource);
-            _stringBuilder.Append(')');
+            
             return node;
         }
 
         protected override Expression VisitAll(AllExpression node)
         {
-            _stringBuilder.Append("SELECT COUNTIF (");
+            _stringBuilder.Append("SELECT SUM(CASE WHEN ISNULL(");
             Visit(node.Predicate);
-            _stringBuilder.Append(')');
-            _stringBuilder.Append(" = COUNT(*)");
+            _stringBuilder.Append(",0)==COUNT(*) THEN 1 ELSE 0 END)");
             Visit(node.Source);
             return node;
         }
 
         protected override Expression VisitAny(AnyExpression node)
         {
-            _stringBuilder.Append("SELECT COUNTIF (");
+            _stringBuilder.Append("SELECT SUM(CASE WHEN ISNULL(");
             Visit(node.Predicate);
-            _stringBuilder.Append(')');
-            _stringBuilder.Append(" > 0");
+            _stringBuilder.Append(",0)=1 THEN 1 ELSE 0 END)");
             Visit(node.Source);
             return node;
         }
@@ -331,14 +321,13 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitConstantTable(TableExpression node)
         {
-            _stringBuilder.AppendLine();
-
             if (!_stringBuilder.ToString().StartsWith("SELECT "))
             {
                 _stringBuilder.Append("SELECT ");
                 _stringBuilder.Append(string.Join(", ", GetColumns(node.TableType)));
             }
 
+            _stringBuilder.AppendLine();
             _stringBuilder.Append("FROM ");
             _stringBuilder.AppendWithSquareBracketAround(node.Value.TableName);
             _stringBuilder.Append(" AS ");
@@ -379,12 +368,24 @@ namespace JustLinq.SqlServer
         {
             Visit(node.Left);
 
-            if (_binaryOperandMap.TryGetValue(node.NodeType, out var value))
+            if (_comparingOperandMap.TryGetValue(node.NodeType, out var value))
             {
+                _stringBuilder.AppendLine();
+                _stringBuilder.AppendTab(_depth);
                 _stringBuilder.Append(value);
+                _stringBuilder.AppendWhiteSpace();
+
+                Visit(node.Right);
+                return node;
             }
 
-            Visit(node.Right);
+            if(_binaryOperandMap.TryGetValue(node.NodeType, out value))
+            {
+                _stringBuilder.Append(value);
+                Visit(node.Right);
+                return node;
+            }
+
             return node;
         }
 
@@ -410,7 +411,7 @@ namespace JustLinq.SqlServer
         {
             var prefix = tableType.Name;
             var propertyInfos = tableType.GetProperties(); //TODO: get column decorator
-            return propertyInfos.Select(p => prefix + "." + ((p.GetCustomAttribute<Attribute>()?.ToString()) ?? p.Name)).ToArray();
+            return propertyInfos.Select(p => "[" + prefix + "].[" + ((p.GetCustomAttribute<Attribute>()?.ToString()) ?? p.Name + "]")).ToArray();
         }
     }
 }

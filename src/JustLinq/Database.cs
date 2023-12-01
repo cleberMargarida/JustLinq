@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -18,21 +19,21 @@ namespace JustLinq
             executeQuery = optionsInstance.ExecuteQuery;
         } 
 
-        public IJustLinqQueryable<TEntity> CreateQuery<TEntity>(Action<TableBuilder<TEntity>>? decorate = default)
+        public IQueryable<TEntity> CreateQuery<TEntity>(Action<TableBuilder<TEntity>>? decorate = default)
         {
             var table = BuildTableMap(decorate);
             table.TableName = typeof(TEntity).Name;
             return CreateQuery(table);
         }
 
-        public IJustLinqQueryable<TEntity> CreateQuery<TEntity>(string tableName, Action<TableBuilder<TEntity>>? decorate = default)
+        public IQueryable<TEntity> CreateQuery<TEntity>(string tableName, Action<TableBuilder<TEntity>>? decorate = default)
         {
             var table = BuildTableMap(decorate);
             table.TableName = tableName;
             return CreateQuery(table);
         }
 
-        private IJustLinqQueryable<TEntity> CreateQuery<TEntity>(Table<TEntity> table)
+        private IQueryable<TEntity> CreateQuery<TEntity>(Table<TEntity> table)
         {
             var provider = new JustLinqQueryProvider(this.executeQuery);
             var expression = Expression.Constant(table);

@@ -5,8 +5,11 @@ namespace JustLinq
     public static class JustLinqQueryableExtensions
     {
         public static string ToQueryString(this IQueryable query)
-        {
-            return ExpressionTranslator.Shared.Translate(query.Expression);
-        }
+            => ExpressionTranslator.Shared.Translate(query.Expression);
+
+#if DEBUG
+        public static string? ToQueryString(this object? query)
+            => ExpressionTranslator.Shared.NextQuery;
+#endif
     }
 }

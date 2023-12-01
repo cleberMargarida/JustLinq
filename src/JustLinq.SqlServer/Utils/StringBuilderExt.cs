@@ -8,9 +8,11 @@
             return stringBuilder;
         }
 
-        public static StringBuilder AppendTab(this StringBuilder stringBuilder)
+        public static StringBuilder AppendTab(this StringBuilder stringBuilder, uint depth)
         {
-            stringBuilder.Append('\t');
+            for (int i = 0; i <= depth; i++)
+                stringBuilder.Append("  ");
+
             return stringBuilder;
         }
 

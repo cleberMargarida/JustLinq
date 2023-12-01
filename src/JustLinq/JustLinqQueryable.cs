@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace JustLinq
 {
-    internal class JustLinqQueryable<T> : IJustLinqQueryable<T>
+    internal class JustLinqQueryable<T> : IJustLinqOrderByQueryable<T>
     {
         public Type ElementType => typeof(T);
         public Expression? Expression { get; }

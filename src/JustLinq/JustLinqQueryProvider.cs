@@ -26,6 +26,10 @@ namespace JustLinq
         private TResult Execute<TResult>(MethodCallExpression expression)
         {
             var query = ExpressionTranslator.Shared.Translate(expression);
+#if DEBUG
+            ExpressionTranslator.Shared.NextQuery = query;
+#endif
+
             var result = _executeQuery.GetResult<TResult>(query);
 
             return ResultCanBeDefault(expression.Method.Name) ?

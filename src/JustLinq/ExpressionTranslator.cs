@@ -13,6 +13,7 @@ namespace JustLinq
             set => shared = value;
         }
 
+        internal string? NextQuery { get; set; }
         public abstract string Translate(Expression expression);
     }
 }

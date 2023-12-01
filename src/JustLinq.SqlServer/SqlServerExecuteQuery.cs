@@ -8,7 +8,7 @@
 
         public TResult GetResult<TResult>(string query)
         {
-            throw new System.NotImplementedException();
+            return default;
         }
     }
 }

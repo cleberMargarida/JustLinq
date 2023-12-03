@@ -19,7 +19,7 @@ namespace JustLinq
             executeQuery = options.ExecuteQuery;
         } 
 
-        public IQueryable<TEntity> CreateQuery<TEntity>(Action<TableBuilder<TEntity>>? decorate = default)
+        public IQueryable<TEntity> Query<TEntity>(Action<TableBuilder<TEntity>>? decorate = default)
             where TEntity : new()
         {
             var table = BuildTableMap(decorate);

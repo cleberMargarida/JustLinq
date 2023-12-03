@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace JustLinq
@@ -14,7 +15,7 @@ namespace JustLinq
             this.tableBuilder = tableBuilder;
         }
 
-        public ColumnBuilder<T> HasName(string columnName)
+        public ColumnBuilder<T> Name(string columnName)
         {
             var visitor = new MemberGetter();
             visitor.Visit(property.Body);
@@ -25,6 +26,32 @@ namespace JustLinq
                 tableBuilder.ColumnsMap[member] = columnName;
             }
 
+            return this;
+        }
+
+        public ColumnBuilder<T> SqlType(string sqlType)
+        {
+            //TODO: create a hashmap between member and sqlType.
+            return this;
+        }
+
+        public ColumnBuilder<T> PrimaryKey()
+        {
+            //TODO: create a hashmap between table and PK's members
+            return this;
+        }
+
+        public ColumnBuilder<T> ForeignKey<T2>(T2 externalTable)
+            where T2 : IQueryable
+        {
+            //TODO: create a hashmap between tuple (table, member) and external table.
+            return this;
+        }
+
+        [Obsolete("prefer exclude the property using .Select")]
+        public ColumnBuilder<T> Skip()
+        {
+            //TODO: create a hasmap between tables and skip members.
             return this;
         }
 

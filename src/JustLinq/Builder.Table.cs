@@ -22,7 +22,7 @@ namespace JustLinq
             return new ColumnBuilder<T>(property, this);
         }
 
-        public void HasName(string tableName)
+        public void Name(string tableName)
         {
             this.tableName = tableName;
         }

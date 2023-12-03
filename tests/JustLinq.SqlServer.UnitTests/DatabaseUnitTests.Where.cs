@@ -14,7 +14,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith")
                                 .ToQueryString();
 
@@ -38,7 +38,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith" &&
                                             x.Email == "bob.smith@example.com" &&
                                             x.Id > 0)
@@ -63,7 +63,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith" ||
                                             x.Email == "bob.smith@example.com" ||
                                             x.Id > 0)
@@ -85,7 +85,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith")
                                 .Select(x => x.Id)
                                 .ToQueryString();
@@ -108,7 +108,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith" &&
                                             x.Email == "bob.smith@example.com" &&
                                             x.Id > 0)
@@ -133,7 +133,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith" ||
                                             x.Email == "bob.smith@example.com" ||
                                             x.Id > 0)
@@ -157,7 +157,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith")
                                 .OrderBy(x => x.Id)
                                 .ToQueryString();
@@ -178,7 +178,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .Where(x => x.Name == "Bob Smith")
                                 .FirstOrDefault()
                                 .ToQueryString();

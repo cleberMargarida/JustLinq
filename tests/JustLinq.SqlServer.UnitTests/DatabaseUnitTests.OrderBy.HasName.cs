@@ -14,17 +14,17 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>(table => 
-                {
-                    table.HasName("employees");
-                    table.Column(c => c.Id).HasName("employee_id");
-                    table.Column(c => c.Name).HasName("employee_name");
-                    table.Column(c => c.Phone).HasName("employee_phone");
-                    table.Column(c => c.Email).HasName("employee_email");
-                    table.Column(c => c.StartDate).HasName("employee_startdate");
-                })
-                .OrderBy(x => x.Name)
-                .ToQueryString();
+            var query = database.Query<Employee>(table => 
+                                {
+                                    table.Name("employees");
+                                    table.Column(c => c.Id).Name("employee_id");
+                                    table.Column(c => c.Name).Name("employee_name");
+                                    table.Column(c => c.Phone).Name("employee_phone");
+                                    table.Column(c => c.Email).Name("employee_email");
+                                    table.Column(c => c.StartDate).Name("employee_startdate");
+                                })
+                                .OrderBy(x => x.Name)
+                                .ToQueryString();
 
             //assert
             query.Should().Be(ExpectedQuery);
@@ -43,18 +43,18 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>(table =>
-                {
-                    table.HasName("employees");
-                    table.Column(c => c.Id).HasName("employee_id");
-                    table.Column(c => c.Name).HasName("employee_name");
-                    table.Column(c => c.Phone).HasName("employee_phone");
-                    table.Column(c => c.Email).HasName("employee_email");
-                    table.Column(c => c.StartDate).HasName("employee_startdate");
-                })
-                .OrderBy(x => x.Name)
-                .Select(x => x.Id)
-                .ToQueryString();
+            var query = database.Query<Employee>(table =>
+                                {
+                                    table.Name("employees");
+                                    table.Column(c => c.Id).Name("employee_id");
+                                    table.Column(c => c.Name).Name("employee_name");
+                                    table.Column(c => c.Phone).Name("employee_phone");
+                                    table.Column(c => c.Email).Name("employee_email");
+                                    table.Column(c => c.StartDate).Name("employee_startdate");
+                                })
+                                .OrderBy(x => x.Name)
+                                .Select(x => x.Id)
+                                .ToQueryString();
 
             //assert
             query.Should().Be(ExpectedQuery);
@@ -73,18 +73,18 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>(table =>
-                {
-                    table.HasName("employees");
-                    table.Column(c => c.Id).HasName("employee_id");
-                    table.Column(c => c.Name).HasName("employee_name");
-                    table.Column(c => c.Phone).HasName("employee_phone");
-                    table.Column(c => c.Email).HasName("employee_email");
-                    table.Column(c => c.StartDate).HasName("employee_startdate");
-                })
-                .OrderBy(x => x.Name)
-                .Where(x => x.Id > 0)
-                .ToQueryString();
+            var query = database.Query<Employee>(table =>
+                                {
+                                    table.Name("employees");
+                                    table.Column(c => c.Id).Name("employee_id");
+                                    table.Column(c => c.Name).Name("employee_name");
+                                    table.Column(c => c.Phone).Name("employee_phone");
+                                    table.Column(c => c.Email).Name("employee_email");
+                                    table.Column(c => c.StartDate).Name("employee_startdate");
+                                })
+                                .OrderBy(x => x.Name)
+                                .Where(x => x.Id > 0)
+                                .ToQueryString();
 
             //assert
             query.Should().Be(ExpectedQuery);
@@ -102,18 +102,18 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>(table =>
-                {
-                    table.HasName("employees");
-                    table.Column(c => c.Id).HasName("employee_id");
-                    table.Column(c => c.Name).HasName("employee_name");
-                    table.Column(c => c.Phone).HasName("employee_phone");
-                    table.Column(c => c.Email).HasName("employee_email");
-                    table.Column(c => c.StartDate).HasName("employee_startdate");
-                })
-                .OrderBy(x => x.Name)
-                .FirstOrDefault()
-                .ToQueryString();
+            var query = database.Query<Employee>(table =>
+                                {
+                                    table.Name("employees");
+                                    table.Column(c => c.Id).Name("employee_id");
+                                    table.Column(c => c.Name).Name("employee_name");
+                                    table.Column(c => c.Phone).Name("employee_phone");
+                                    table.Column(c => c.Email).Name("employee_email");
+                                    table.Column(c => c.StartDate).Name("employee_startdate");
+                                })
+                                .OrderBy(x => x.Name)
+                                .FirstOrDefault()
+                                .ToQueryString();
 
             //assert
             query.Should().Be(ExpectedQuery);

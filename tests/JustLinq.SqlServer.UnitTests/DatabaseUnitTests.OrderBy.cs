@@ -14,7 +14,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .ToQueryString();
 
@@ -35,7 +35,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .Select(x => x.Id)
                                 .ToQueryString();
@@ -57,7 +57,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .Where(x => x.Id > 0)
                                 .ToQueryString();
@@ -79,7 +79,7 @@
             
             //act
             var query = database
-                .CreateQuery<Employee>()
+                .Query<Employee>()
                 .OrderBy(x => x.Name)
                 .FirstOrDefault()
                 .ToQueryString();

@@ -14,7 +14,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .ThenBy(x => x.Id)
                                 .ToQueryString();
@@ -36,7 +36,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .ThenBy(x => x.Id)
                                 .Select(x => x.Id)
@@ -59,7 +59,7 @@
             """;
 
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .ThenBy(x => x.Id)
                                 .Where(x => x.Id > 0)
@@ -81,7 +81,7 @@
             """;
             
             //act
-            var query = database.CreateQuery<Employee>()
+            var query = database.Query<Employee>()
                                 .OrderBy(x => x.Name)
                                 .ThenBy(x => x.Id)
                                 .FirstOrDefault()

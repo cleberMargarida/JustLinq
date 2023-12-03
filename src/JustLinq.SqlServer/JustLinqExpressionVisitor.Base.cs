@@ -141,16 +141,32 @@ namespace JustLinq.SqlServer
 
             if (CallStack.Length > 1 &&
                 CaseSelectRewrite.Contains(lastMethodName) &&
-                lastButOneMethodName.Equals(nameof(Queryable.Select)))
+                lastButOneMethodName is nameof(Queryable.Select))
             {
-                node = ExpressionSelectRewrite.Rewrite(node);
+                node = ExpressionRewrite.Rewrite<ExpressionSelectRewrite>(node);
             }
 
             if (CallStack.Length > 1 &&
                 lastMethodName is nameof(Queryable.Where) &&
                 lastButOneMethodName is nameof(Queryable.Where))
             {
-                node = ExpressionWhereRewrite.Rewrite(node);
+                node = ExpressionRewrite.Rewrite<ExpressionWhereRewrite>(node);
+            }
+
+            if (CallStack.Length > 1 &&
+                lastMethodName is nameof(Queryable.Where) &&
+                lastButOneMethodName is nameof(Queryable.OrderBy) || 
+                lastButOneMethodName is nameof(Queryable.OrderByDescending))
+            {
+                node = ExpressionRewrite.Rewrite<ExpressionOrderByRewrite>(node);
+            }
+
+            if (CallStack.Length > 1 &&
+                lastMethodName is nameof(Queryable.Where) &&
+                lastButOneMethodName is nameof(Queryable.ThenBy) ||
+                lastButOneMethodName is nameof(Queryable.ThenByDescending))
+            {
+                node = ExpressionRewrite.Rewrite<ExpressionThenByRewrite>(node);
             }
 
             switch (node.Method.Name)

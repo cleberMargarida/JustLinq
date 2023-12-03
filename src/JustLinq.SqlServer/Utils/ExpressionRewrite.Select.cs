@@ -1,30 +1,15 @@
-﻿using JustLinq.SqlServer;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace JustLinq.SqlServer.Utils
 {
-    internal class ExpressionSelectRewrite : ExpressionVisitor
+    internal class ExpressionSelectRewrite : ExpressionRewrite
     {
-        private readonly Expression _root;
-
         private MethodCallExpression? _lastCall;
-        private Expression? _result;
         private Expression? _member;
 
-        public ExpressionSelectRewrite(Expression root)
-        {
-            _root = root;
-        }
-
-        internal static LambdaExpression Rewrite(LambdaExpression node)
-        {
-            var instance = new ExpressionSelectRewrite(node);
-            instance.Visit(node);
-
-            return (instance._result ?? instance._root).Cast<LambdaExpression>();
-        }
+        public ExpressionSelectRewrite(Expression root) : base(root) { }
 
         internal static MethodCallExpression Rewrite(MethodCallExpression node)
         {
@@ -206,27 +191,6 @@ namespace JustLinq.SqlServer.Utils
                 _ => null,
             };
 
-            void SetResult(Expression argument, MethodCallExpression newExpression)
-            {
-                if (_root is MethodCallExpression)
-                {
-                    _result = newExpression;
-                    return;
-                }
-
-                if (_root is LambdaExpression && argument is ParameterExpression parameter)
-                {
-                    var lambda = Expression.Lambda(
-                        delegateType: _root!.Type,
-                        body: newExpression,
-                        parameters: parameter
-                    );
-
-                    _result = lambda;
-                    return;
-                }
-            }
-
             UnaryExpression BuildPredicate(MethodCallExpression node, LambdaExpression seletorOperand)
             {
                 var predicateBody = ChangeParameter(node);
@@ -273,6 +237,27 @@ namespace JustLinq.SqlServer.Utils
                 _member = null;
 
                 return predicateBody;
+            }
+        }
+
+        protected override void SetResult(Expression argument, MethodCallExpression newExpression)
+        {
+            if (_root is MethodCallExpression)
+            {
+                _result = newExpression;
+                return;
+            }
+
+            if (_root is LambdaExpression && argument is ParameterExpression parameter)
+            {
+                var lambda = Expression.Lambda(
+                    delegateType: _root!.Type,
+                    body: newExpression,
+                    parameters: parameter
+                );
+
+                _result = lambda;
+                return;
             }
         }
 

@@ -20,9 +20,9 @@ namespace JustLinq.SqlServer
             _stringBuilder.Append(')');
             _stringBuilder.Append(" AS ");
 
-            var alias = FactorySingleton
+            var alias = Instance
                 .TableVisitor
-                .VisitTable(node)
+                .VisitTable(node)?
                 .TableType.Name;
 
             _stringBuilder.Append(alias);

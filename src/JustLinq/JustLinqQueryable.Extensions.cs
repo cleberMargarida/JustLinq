@@ -8,7 +8,7 @@ namespace JustLinq
             => ExpressionTranslator.Shared.Translate(query.Expression);
 
 #if DEBUG
-        public static string? ToQueryString(this object? query)
+        public static string? ToQueryString(this object? _)
             => ExpressionTranslator.Shared.NextQuery;
 #endif
     }

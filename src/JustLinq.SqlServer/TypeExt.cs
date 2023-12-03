@@ -7,26 +7,6 @@ namespace System.Reflection
 {
     internal static class TypeExt
     {
-        public static string KeyColumn(this Type type)
-        {
-            if (typeof(Table).IsAssignableFrom(type))
-            {
-                type = type.GetGenericArguments()[0];
-            }
-
-            var properties = type
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .ToDictionary(x => x.Name);
-
-            properties.TryGetValue("Id", out var keyColumnProperty);
-
-            var keyColumn = properties.Values //TODO: get key decorator
-                .SingleOrDefault(p => p.GetCustomAttribute<Attribute>() != null)?
-                .Name ?? keyColumnProperty?.Name ?? throw GetInvalidOperationException(type);
-
-            return keyColumn;
-        }
-
         private static InvalidOperationException GetInvalidOperationException(Type type)
         {
             return new InvalidOperationException();

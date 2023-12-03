@@ -8,7 +8,7 @@ namespace JustLinq.SqlServer
 
         private JustLinqExpressionVisitorFactory() { }
 
-        public static JustLinqExpressionVisitorFactory FactorySingleton => _instance;
+        public static JustLinqExpressionVisitorFactory Instance => _instance;
 
         internal JustLinqExpressionVisitor Create(string? methodName = "") => methodName switch
         {

@@ -130,11 +130,16 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitThenBy(ThenByExpression node)
         {
+            Visit(node.Source);
+            _stringBuilder.Append(", ");
+            Visit(node.Predicate);
             return node;
         }
 
         protected override Expression VisitThenByDescending(ThenByDescendingExpression node)
         {
+            VisitThenBy(node);
+            _stringBuilder.Append(" DESC");
             return node;
         }
 
@@ -174,7 +179,6 @@ namespace JustLinq.SqlServer
             //ORDER BY[e].[Name] DESC
             Visit(node.Source);
 
-            
             return node;
         }
 
@@ -409,9 +413,11 @@ namespace JustLinq.SqlServer
 
         protected string[] GetColumns(Type tableType)
         {
-            var prefix = tableType.Name;
             var propertyInfos = tableType.GetProperties(); //TODO: get column decorator
-            return propertyInfos.Select(p => "[" + prefix + "].[" + ((p.GetCustomAttribute<Attribute>()?.ToString()) ?? p.Name + "]")).ToArray();
+            var prefix = '[' + tableType.Name + "].[";
+            return propertyInfos
+                .Select(p => prefix + ((p.GetCustomAttribute<Attribute>()?.ToString()) ?? p.Name + ']'))
+                .ToArray();
         }
     }
 }

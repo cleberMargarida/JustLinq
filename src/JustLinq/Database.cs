@@ -12,24 +12,16 @@ namespace JustLinq
     {
         private readonly IExecuteQuery executeQuery;
 
-        public Database(Action<DatabaseOptions> options)
+        public Database(Action<DatabaseOptions> apply)
         {
-            var optionsInstance = new DatabaseOptions();
-            options(optionsInstance);
-            executeQuery = optionsInstance.ExecuteQuery;
+            var options = new DatabaseOptions();
+            apply(options);
+            executeQuery = options.ExecuteQuery;
         } 
 
         public IQueryable<TEntity> CreateQuery<TEntity>(Action<TableBuilder<TEntity>>? decorate = default)
         {
             var table = BuildTableMap(decorate);
-            table.TableName = typeof(TEntity).Name;
-            return CreateQuery(table);
-        }
-
-        public IQueryable<TEntity> CreateQuery<TEntity>(string tableName, Action<TableBuilder<TEntity>>? decorate = default)
-        {
-            var table = BuildTableMap(decorate);
-            table.TableName = tableName;
             return CreateQuery(table);
         }
 

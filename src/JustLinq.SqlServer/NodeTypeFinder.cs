@@ -6,17 +6,21 @@ namespace JustLinq.SqlServer
 {
     internal static class NodeTypeFinder
     {
-        internal static T? Find<T>(this Expression node, Expression<Func<OptionsToFind, bool>> optionsToFind) where T : Expression
+        internal static T Find<T>(this Expression node, Expression<Func<OptionsToFind, bool>> optionsToFind) where T : Expression
         {
             var options = Options(optionsToFind);
             var finder = Find<T>(node, options);
-            return finder?.ResultNode;
+
+            if (finder?.ResultNode == null)
+                throw new InvalidOperationException("not found");
+
+            return finder.ResultNode;
         }
 
-        internal static List<T>? FindAll<T>(this Expression node) where T : Expression
+        internal static List<T> FindAll<T>(this Expression node) where T : Expression
         {
             var finder = Find<T>(node, new OptionsToFind());
-            return finder?.ResultNodes;
+            return finder?.ResultNodes ?? new List<T>();
         }
 
         static NodeTypeFinderInternal<T>? Find<T>(Expression node, OptionsToFind options) where T : Expression => typeof(T) switch

@@ -329,7 +329,7 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal class ThenByExpression : MethodCallExpressionWrapper
+    internal class ThenByExpression : SourcePredicateExpression
     {
         public ThenByExpression(MethodCallExpression node) : base(node)
         {

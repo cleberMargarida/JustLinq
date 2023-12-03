@@ -79,13 +79,7 @@
             
             //act
             var query = database
-                .CreateQuery<Employee>(table =>
-                {
-                    table.HasName("employees");
-                    table.Column(c => c.Email).HasName("employee_email");
-                    table.Column(c => c.Email).HasName("employee_email");
-                    table.Column(c => c.Name).HasName("employee_name");
-                })
+                .CreateQuery<Employee>()
                 .OrderBy(x => x.Name)
                 .FirstOrDefault()
                 .ToQueryString();

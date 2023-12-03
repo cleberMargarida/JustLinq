@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using JustLinq.SqlServer;
 
-namespace JustLinq.UnitTests
+namespace JustLinq.SqlServer.UnitTests
 {
     public class Startup
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("JustLinq.UnitTests")]
+[assembly: InternalsVisibleTo("JustLinq.SqlServer.UnitTests")]
 [assembly: InternalsVisibleTo("JustLinq.SqlServer")]
 
 namespace JustLinq

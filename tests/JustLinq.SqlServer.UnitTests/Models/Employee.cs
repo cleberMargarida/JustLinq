@@ -1,4 +1,5 @@
-﻿namespace JustLinq.UnitTests.Models;
+﻿namespace JustLinq.SqlServer.UnitTests.Models;
+#pragma warning disable CS8618
 
 internal class Employee
 {

@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JustLinq.SqlServer\JustLinq.SqlServer.csproj" />
-    <ProjectReference Include="..\..\src\JustLinq\JustLinq.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
-using ColumnName = System.String;
 
 namespace JustLinq.SqlServer
 {
@@ -93,8 +91,6 @@ namespace JustLinq.SqlServer
         };
 
         protected readonly StringBuilder _stringBuilder = new StringBuilder();
-
-        private Dictionary<MemberInfo, ColumnName>? _columnsMap;
 
         protected List<TableExpression> Tables { get; private set; } = new List<TableExpression>();
         public string TranslatedQuery => _stringBuilder.ToString();
@@ -329,8 +325,6 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitConstantTable(TableExpression node)
         {
-            _columnsMap ??= node.Value.ColumnsMap;
-
             if (!_stringBuilder.ToString().StartsWith("SELECT "))
             {
                 _stringBuilder.Append("SELECT ");
@@ -366,7 +360,7 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            var member = _columnsMap.GetValueOrDefault(node.Member) ?? node.Member.Name;
+            var member = _columnsMap?.GetValueOrDefault(node.Member) ?? node.Member.Name;
             _stringBuilder.AppendWithSquareBracketAround(node.Expression.Type.Name);
             _stringBuilder.Append('.');
             _stringBuilder.AppendWithSquareBracketAround(member);
@@ -421,7 +415,7 @@ namespace JustLinq.SqlServer
             var propertyInfos = tableType.GetProperties(); //TODO: get column decorator
             var prefix = '[' + tableType.Name + "].[";
             return propertyInfos
-                .Select(p => prefix + (_columnsMap.GetValueOrDefault(p) ?? p.Name) + ']')
+                .Select(p => prefix + (_columnsMap?.GetValueOrDefault(p) ?? p.Name) + ']')
                 .ToArray();
         }
     }

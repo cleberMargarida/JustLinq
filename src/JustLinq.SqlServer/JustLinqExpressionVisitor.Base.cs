@@ -1,13 +1,18 @@
 ﻿using JustLinq.SqlServer.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using ColumnName = System.String;
 
 namespace JustLinq.SqlServer
 {
     internal abstract class JustLinqExpressionVisitorBase : ExpressionVisitor
     {
+        protected Dictionary<MemberInfo, ColumnName>? _columnsMap;
+
         private static readonly string[] CaseSelectRewrite = new string[]
         {
              nameof(Queryable.Where),
@@ -40,6 +45,8 @@ namespace JustLinq.SqlServer
             {
                 return null;
             }
+
+            _columnsMap ??= GetColumnsMapOrNew(expression);
 
             switch (expression!.NodeType)
             {
@@ -236,6 +243,15 @@ namespace JustLinq.SqlServer
             }
 
             return node;
+        }
+
+        private static Dictionary<MemberInfo, string> GetColumnsMapOrNew(Expression expression)
+        {
+            return new JustLinqTableExpressionVisitor()
+                .VisitTable(expression)?
+                .Value?
+                .ColumnsMap ??
+                new Dictionary<MemberInfo, ColumnName>();
         }
 
         protected abstract Expression VisitAll(AllExpression node);

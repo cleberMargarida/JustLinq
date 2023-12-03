@@ -32,5 +32,11 @@ namespace JustLinq.SqlServer
             base.VisitMethodCall(node);
             return _table;
         }
+
+        internal TableExpression? VisitTable(Expression node)
+        {
+            base.Visit(node);
+            return _table;
+        }
     }
 }

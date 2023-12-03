@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using ColumnName = System.String;
 
 namespace JustLinq.SqlServer
 {
@@ -12,7 +13,6 @@ namespace JustLinq.SqlServer
     {
         private uint _depth = 0;
 
-        protected readonly StringBuilder _stringBuilder = new StringBuilder();
         private static readonly Dictionary<ExpressionType, string> _comparingOperandMap = new Dictionary<ExpressionType, string>()
         {
             {
@@ -91,6 +91,10 @@ namespace JustLinq.SqlServer
                 " ^ "
             }
         };
+
+        protected readonly StringBuilder _stringBuilder = new StringBuilder();
+
+        private Dictionary<MemberInfo, ColumnName>? _columnsMap;
 
         protected List<TableExpression> Tables { get; private set; } = new List<TableExpression>();
         public string TranslatedQuery => _stringBuilder.ToString();
@@ -325,6 +329,8 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitConstantTable(TableExpression node)
         {
+            _columnsMap ??= node.Value.ColumnsMap;
+
             if (!_stringBuilder.ToString().StartsWith("SELECT "))
             {
                 _stringBuilder.Append("SELECT ");
@@ -360,9 +366,8 @@ namespace JustLinq.SqlServer
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            var source = node.Expression.Type.Name; //TODO: get column decorator
-            var member = (node.Member.GetCustomAttribute<Attribute>()?.ToString()) ?? node.Member.Name;
-            _stringBuilder.AppendWithSquareBracketAround(source);
+            var member = _columnsMap.GetValueOrDefault(node.Member) ?? node.Member.Name;
+            _stringBuilder.AppendWithSquareBracketAround(node.Expression.Type.Name);
             _stringBuilder.Append('.');
             _stringBuilder.AppendWithSquareBracketAround(member);
             return node;
@@ -416,7 +421,7 @@ namespace JustLinq.SqlServer
             var propertyInfos = tableType.GetProperties(); //TODO: get column decorator
             var prefix = '[' + tableType.Name + "].[";
             return propertyInfos
-                .Select(p => prefix + ((p.GetCustomAttribute<Attribute>()?.ToString()) ?? p.Name + ']'))
+                .Select(p => prefix + (_columnsMap.GetValueOrDefault(p) ?? p.Name) + ']')
                 .ToArray();
         }
     }

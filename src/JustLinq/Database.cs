@@ -20,6 +20,7 @@ namespace JustLinq
         } 
 
         public IQueryable<TEntity> CreateQuery<TEntity>(Action<TableBuilder<TEntity>>? decorate = default)
+            where TEntity : new()
         {
             var table = BuildTableMap(decorate);
             return CreateQuery(table);
@@ -33,6 +34,7 @@ namespace JustLinq
         }
 
         private static Table<TEntity> BuildTableMap<TEntity>(Action<TableBuilder<TEntity>>? decorate)
+            where TEntity : new()
         {
             var tableMapBuilder = new TableBuilder<TEntity>();
             decorate?.Invoke(tableMapBuilder);

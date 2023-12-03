@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace JustLinq
 {
     public class Table : IQueryable, IOrderedQueryable
     {
+        public Dictionary<MemberInfo, string> ColumnsMap { get; set; } = default!;
         public string TableName { get; set; } = default!;
         public Type ElementType => throw new NotImplementedException();
         public Expression Expression => throw new NotImplementedException();
